@@ -24,6 +24,8 @@
         "nvidia-open-dkms",
         "nvidia-utils",
         "nvidia-container-toolkit",
+        "nvidia-ai-workbench",
+        "dgx-dashboard",
         "nsight-compute",
         "nsight-systems",
         "rdma-core"
