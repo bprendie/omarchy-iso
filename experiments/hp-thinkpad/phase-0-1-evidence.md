@@ -9,7 +9,7 @@
 - Experimental HP package `0.1-1` and common early package `0.1-1` installed.
   Exact HP topology SHA-256 is
   `aa303397750f883ecaeed874d7547da658500596247676a6d405bf1ec43290b5`,
-  matching the physically tested oma_snap topology.
+  matching the physically tested earlier prototype topology.
 - HP ADSP and cDSP remote processors are `running` with the board paths
   provided by the HP package. ALSA card 0 and PipeWire speaker/microphone nodes
   exist. The owner hears no audio. Kernel reports a Qualcomm APM command
@@ -24,7 +24,7 @@
 
 ## ThinkPad Dragon inventory
 
-No installed Dragon ThinkPad was reachable for Phase 0. The old oma_snap SSH
+No installed Dragon ThinkPad was reachable for Phase 0. The old earlier prototype SSH
 address `10.0.0.42` timed out. Its previous audio, RGB camera and QNN HTP
 results were obtained on the Ubuntu kernel, not Dragon. Keyboard backlight
 remained unresolved, and its TrackPoint cable was disconnected pending a

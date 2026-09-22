@@ -5,9 +5,12 @@ confirmed its running kernel is 7.2.6-1-aarch64-ARCH. The T14 cannot reach the
 installer from either USB-A or USB-C, and its keyboard does not work in the
 initramfs rescue shell. IMG_0397 shows missing qcom/gen70500_sqe.fw and a
 deferred LPASS pin-controller probe. It does not show the error that launched
-the shell. The last owner-confirmed working T14 baseline is oma_snap 0.1.2,
+the shell. The last owner-confirmed working T14 baseline is earlier prototype 0.1.2,
 using 7.0.0-31-generic. Kernel configuration, device trees and boot assembly
 also differ; the version number alone does not identify the regression.
+
+Current build instructions: [hardware README](README.md). The staged-root
+repacking commands below describe the historical investigation only.
 
 ## Changes
 
@@ -27,12 +30,12 @@ also differ; the version number alone does not identify the regression.
 
 Upstream was fetched again before this task. ISO dragon remains f97a775 and
 runtime dragon remains 66a33c3. Rebuild the existing t14-power ISO's root,
-initramfs and UKI with experiments/hp-thinkpad/rebuild-t14-bootdiag.sh. Preserve
+initramfs and UKI with the retired staged-root repacking helper. Preserve
 the existing kernel, DTs, boot partition and application package versions.
 The package-recipe master branch has newer application updates, but those
 are not incorporated in this controlled boot candidate.
 
-Use the ARM container for prepare/initramfs and oma-snap-builder:local for
+Use the ARM container for prepare/initramfs and the historical native builder for
 finish, with the repository mounted at /repo. Extract the previous SquashFS
 into build/hp-thinkpad/t14-bootdiag-root first and build early package 0.3.
 The initramfs stage requires a privileged container for arch-chroot mounts.

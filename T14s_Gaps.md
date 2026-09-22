@@ -10,7 +10,7 @@ An unresponsive diagnostic `bluetoothctl show` process was terminated;
 no Bluetooth service or hardware state was changed.
 
 Detected hardware, driver availability and firmware startup are not functional
-passes. Earlier oma_snap results are baselines, not results for this installation.
+passes. Earlier earlier prototype results are baselines, not results for this installation.
 
 ## System under test
 
@@ -45,7 +45,7 @@ missing interface or failed check. `Untested` requires additional validation.
 | Bluetooth | BlueZ 5.87-2 installed; service enabled but inactive, `ConditionResult=no`; `/sys/class/bluetooth` absent, no HCI controller or Bluetooth rfkill entry. The scanned running DT has no Bluetooth node. | **Fails controller enumeration on this boot**. Determine the intended board transport and missing binding/initialization; merely enabling the service is not the missing step. |
 | Internal display / brightness | eDP connected and enabled at 1920×1200. Kernel recognizes BOE NE140WUM-N6G (`0x0b66`). Backlight reads 3276/4095. | **Works for visible installer use**, with the installed display interface active. Brightness keys, range, refresh behavior and visual quality untested. Unlike the HP, this panel is identified without the reported unknown-panel warning. |
 | GPU | DRM card and render node exist; kernel reports loaded GMU firmware v4.3.17; Mesa/freedreno 26.2.3 installed. | **Detected**. No Vulkan upload, rendering or OpenGL test was run on this T14. Do not transfer the HP's Vulkan result. |
-| Keyboard / touchpad / TrackPoint | I²C keyboard and touchpad registered, plus `ThinkPad Extra Buttons`. Several `EVIOCSKEYCODE` mappings fail with `Invalid argument` on the extra-button device. | **Detected**; ordinary keys, gestures and Fn actions need physical checks. Earlier oma_snap notes say the TrackPoint cable was disconnected pending keyboard replacement; current hardware condition is not confirmed. |
+| Keyboard / touchpad / TrackPoint | I²C keyboard and touchpad registered, plus `ThinkPad Extra Buttons`. Several `EVIOCSKEYCODE` mappings fail with `Invalid argument` on the extra-button device. | **Detected**; ordinary keys, gestures and Fn actions need physical checks. Earlier earlier prototype notes say the TrackPoint cable was disconnected pending keyboard replacement; current hardware condition is not confirmed. |
 | Keyboard backlight / EC | `lenovo_thinkpad_t14s` loaded, bound to `thinkpad-t14s-ec`; `platform::kbd_backlight` reads 0 with maximum 2. Mute, mic-mute, power, lid-logo and charge LEDs are exposed. | **Detected**. No brightness write was attempted. Earlier 7.0 testing accepted a write but read back zero; that historical failure does not establish current Dragon behavior. |
 | Speakers / headset | ALSA exposes two playback PCMs. PipeWire has a default speaker sink at 0.40 and an HDMI playback sink. Boot log contains an APM command timeout. | **Detected**, not an audio pass or proven failure. No sound was played or physically confirmed in this scan. Test speakers, channel separation, volume and headset routing. |
 | Microphones | Two ALSA capture PCMs and PipeWire internal/headset microphone sources exist. | **Detected**. Stream opening, signal level, routing and usable audio remain untested; no recording was made. |
@@ -99,7 +99,7 @@ as a module; this is not the HP's missing-sensor-driver situation.
 
 ## Comparison with the earlier successful T14
 
-The [oma_snap T14 follow-up](../oma_snap/docs/t14s-camera-backlight-npu.md)
+The earlier prototype T14 follow-up (historical hardware notes)
 records physical tests on kernel `7.0.0-31-generic`: OV02C10 direct capture,
 owner-confirmed preview and PipeWire capture succeeded after userspace packages
 were added. Those userspace packages are now present on Dragon, but the board

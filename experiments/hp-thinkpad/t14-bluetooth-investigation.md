@@ -3,7 +3,7 @@
 The installed T14s runs `linux-aarch64 7.2.6-1` with BlueZ and Qualcomm
 firmware installed, but has no HCI controller. The running board tree leaves
 `uart14` (`serial@a98000`) disabled and has no Bluetooth child or WCN7850 PMU.
-The physically working `oma_snap` kernel 7.0 tree has those nodes, along with
+The physically working `earlier prototype` kernel 7.0 tree has those nodes, along with
 GPIO 214 for the WCN rail and GPIOs 116/117 for Bluetooth/WLAN enable. The
 mainline Qualcomm QCP board tree uses the same WCN7850 circuit. Mainline T14s
 currently omits it.

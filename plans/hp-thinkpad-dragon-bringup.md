@@ -13,7 +13,7 @@ ALSA and PipeWire expose a speaker, but the owner hears no audio. `cam -l` lists
 no cameras. The cDSP FastRPC endpoint fails to probe (`-12`) and there is no
 `/dev/fastrpc-cdsp`. ThinkPad behavior on this Dragon ISO is **unmeasured**.
 The owner previously validated audio, RGB camera and a small QNN HTP graph on
-oma_snap's Ubuntu kernel, subject to the qualifications in its validation notes.
+earlier prototype's Ubuntu kernel, subject to the qualifications in its validation notes.
 
 Do not turn a firmware load, detected ALSA card, detected camera node or
 compiled module into a hardware PASS. Record the kernel, DTB, firmware hashes,
@@ -24,9 +24,9 @@ or untested states remain visible until replaced by physical evidence.
 
 | Shared work | HP lane | ThinkPad lane | Exit gate |
 | --- | --- | --- | --- |
-| Inventory Dragon kernel config, selected DTB, installed packages, firmware paths/hashes, initramfs, boot args and DSP/FastRPC/camera logs; compare with the working oma_snap set. Capture a per-board matrix with `works`, `fails`, `untested` and a link to raw local logs. | Preserve the current installed HP audio, camera and NPU logs. Confirm which exact firmware and UCM files the running kernel loads. | Boot/install the same image on the ThinkPad when hardware is available; collect the same inventory. Record the keyboard/TrackPoint cable state separately. | Both boards have inventories, or the ThinkPad is explicitly marked blocked by physical availability. Differences are assigned to kernel/DT, firmware, ALSA/UCM, userspace or integration. |
+| Inventory Dragon kernel config, selected DTB, installed packages, firmware paths/hashes, initramfs, boot args and DSP/FastRPC/camera logs; compare with the working earlier prototype set. Capture a per-board matrix with `works`, `fails`, `untested` and a link to raw local logs. | Preserve the current installed HP audio, camera and NPU logs. Confirm which exact firmware and UCM files the running kernel loads. | Boot/install the same image on the ThinkPad when hardware is available; collect the same inventory. Record the keyboard/TrackPoint cable state separately. | Both boards have inventories, or the ThinkPad is explicitly marked blocked by physical availability. Differences are assigned to kernel/DT, firmware, ALSA/UCM, userspace or integration. |
 
-Use oma_snap's physical results as reference, not as a Dragon pass. A ThinkPad
+Use earlier prototype's physical results as reference, not as a Dragon pass. A ThinkPad
 lane can proceed in source/package review while its physical lane waits. Avoid
 repeating firmware extraction, hashes, harnesses or test scripts per board.
 
@@ -34,7 +34,7 @@ repeating firmware extraction, hashes, harnesses or test scripts per board.
 
 | Shared work | HP lane | ThinkPad lane | Exit gate |
 | --- | --- | --- | --- |
-| Make small package recipes for common early modules/test utilities and separate board firmware/config. Keep exact DMI selection in `configs/aarch64/platforms.json`. Pin source revisions and hashes; record redistribution terms. Confirm packages install in both live and target systems and survive kernel/package updates. Follow the team's package recipe and kernel ownership rather than adding an alternate boot/kernel manager. | Package HP GPU/ADSP/cDSP files, tested topology and DMI-name UCM mapping. | Package Lenovo GPU/ADSP/video/topology and the **matched** cDSP firmware pair validated by oma_snap. | Package contents, initramfs membership, selected DTB, offline closure, and installed-root update hooks pass on both models. No cross-board file overrides or generic DMI matches. |
+| Make small package recipes for common early modules/test utilities and separate board firmware/config. Keep exact DMI selection in `configs/aarch64/platforms.json`. Pin source revisions and hashes; record redistribution terms. Confirm packages install in both live and target systems and survive kernel/package updates. Follow the team's package recipe and kernel ownership rather than adding an alternate boot/kernel manager. | Package HP GPU/ADSP/cDSP files, tested topology and DMI-name UCM mapping. | Package Lenovo GPU/ADSP/video/topology and the **matched** cDSP firmware pair validated by earlier prototype. | Package contents, initramfs membership, selected DTB, offline closure, and installed-root update hooks pass on both models. No cross-board file overrides or generic DMI matches. |
 
 The first ISO already contains experimental versions of these packages. Audit
 those recipes and the pending Dragon team firmware extraction/kernel metadata
@@ -58,7 +58,7 @@ The HP remains an audio/camera/NPU diagnostic candidate at this gate.
 
 | Shared work | HP lane | ThinkPad lane | Exit gate |
 | --- | --- | --- | --- |
-| Compare topology, ALSA routing, UCM selection and DSP messages with oma_snap. Use the same bounded playback/capture checks and log template. Fix a common kernel or package cause once. | Trace the current speaker PCM from `wpctl` through UCM and mixer to the backend. Resolve the audible failure; check speaker, headset and microphones individually. The observed HDMI PCM error is a clue, not proof of the speaker cause. | Run the same endpoint checks on installed Dragon. Do not infer a pass from the earlier oma_snap owner report. | Owner hears speaker and headset playback; microphone capture works; reboot and a package/kernel update retain the result. Record any endpoint still untested. |
+| Compare topology, ALSA routing, UCM selection and DSP messages with earlier prototype. Use the same bounded playback/capture checks and log template. Fix a common kernel or package cause once. | Trace the current speaker PCM from `wpctl` through UCM and mixer to the backend. Resolve the audible failure; check speaker, headset and microphones individually. The observed HDMI PCM error is a clue, not proof of the speaker cause. | Run the same endpoint checks on installed Dragon. Do not infer a pass from the earlier earlier prototype owner report. | Owner hears speaker and headset playback; microphone capture works; reboot and a package/kernel update retain the result. Record any endpoint still untested. |
 
 ## Phase 3 — RGB cameras on both boards
 
@@ -73,9 +73,9 @@ graph. The driver compiled against Dragon's headers; that is not a capture pass.
 
 | Shared work | HP lane | ThinkPad lane | Exit gate |
 | --- | --- | --- | --- |
-| Compare Dragon's cDSP FastRPC DT, kernel config/patches, probe order and memory allocation with the working oma_snap kernel. Resolve endpoint creation before adding NPU runtime. Reuse one local, on-demand calculator/validator/QNN harness; keep SDK binaries out of the public ISO and avoid a permanent polling daemon. | Fix the current `-12` probe and obtain a working `/dev/fastrpc-cdsp`; test with the matching HP cDSP firmware and shells. | Test the Lenovo matched cDSP firmware **and its matching shells/libraries**; do not substitute the previously shipped stock firmware for the validated pair. | Per board: cDSP boots, FastRPC calculator returns sum `499500` and max `999`, DSP validator passes, and explicit HTP backend ID 6 executes the four-element ReLU to `[0,0,0,3]`. Verify cleanup and reboot; label performance and sustained workloads untested. |
+| Compare Dragon's cDSP FastRPC DT, kernel config/patches, probe order and memory allocation with the working earlier prototype kernel. Resolve endpoint creation before adding NPU runtime. Reuse one local, on-demand calculator/validator/QNN harness; keep SDK binaries out of the public ISO and avoid a permanent polling daemon. | Fix the current `-12` probe and obtain a working `/dev/fastrpc-cdsp`; test with the matching HP cDSP firmware and shells. | Test the Lenovo matched cDSP firmware **and its matching shells/libraries**; do not substitute the previously shipped stock firmware for the validated pair. | Per board: cDSP boots, FastRPC calculator returns sum `499500` and max `999`, DSP validator passes, and explicit HTP backend ID 6 executes the four-element ReLU to `[0,0,0,3]`. Verify cleanup and reboot; label performance and sustained workloads untested. |
 
-NPU tests in oma_snap ran with a separate local runtime and privileged FastRPC
+NPU tests in earlier prototype ran with a separate local runtime and privileged FastRPC
 nodes. For Dragon, decide device access policy after the transport is stable.
 Avoid broad permissions merely to make a test pass.
 
@@ -83,7 +83,7 @@ Avoid broad permissions merely to make a test pass.
 
 | Shared work | HP lane | ThinkPad lane | Exit gate |
 | --- | --- | --- | --- |
-| Rebuild the normal Dragon ISO and test live boot, installed unlock, installed boot, update/reboot, firmware discovery and rollback. Check Wi-Fi, Bluetooth, display, brightness, battery/charging, suspend/resume, and audio/camera/NPU after resume. Measure battery cost under matched conditions as described in oma_snap validation and `~/weazl_skill.md`; report uncertainty and minutes per full charge only from controlled samples. | Recheck visible unlock, Fn/media keys and keyboard backlight; these were unresolved under oma_snap. | Recheck TrackPoint and keyboard backlight after the replacement keyboard/cable condition is known. | Both machines meet an agreed hardware matrix, with remaining limitations explicit. No regression in Dragon's default boards or installer/kernel update path. |
+| Rebuild the normal Dragon ISO and test live boot, installed unlock, installed boot, update/reboot, firmware discovery and rollback. Check Wi-Fi, Bluetooth, display, brightness, battery/charging, suspend/resume, and audio/camera/NPU after resume. Measure battery cost under matched conditions as described in earlier prototype validation and `~/weazl_skill.md`; report uncertainty and minutes per full charge only from controlled samples. | Recheck visible unlock, Fn/media keys and keyboard backlight; these were unresolved under earlier prototype. | Recheck TrackPoint and keyboard backlight after the replacement keyboard/cable condition is known. | Both machines meet an agreed hardware matrix, with remaining limitations explicit. No regression in Dragon's default boards or installer/kernel update path. |
 
 ## Phase 6 — Reviewable Dragon contributions
 

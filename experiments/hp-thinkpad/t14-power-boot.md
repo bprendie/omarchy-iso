@@ -9,7 +9,7 @@ the preceding Quattro checkout and its local modifications remain available.
 
 ## Physical evidence
 
-Owner photos IMG_0394–0396 show the installed oma_snap 0.2.2 boot running
+Owner photos IMG_0394–0396 show the installed earlier prototype 0.2.2 boot running
 7.2.0-18-qcom-x1e with the correct ThinkPad LCD model. Btrfs and the PCIe PHY
 load, but neither NVMe devices nor the encrypted root mapping appear.
 Both PCIe slot probes report `Failed to get the power sequencer`. The owner

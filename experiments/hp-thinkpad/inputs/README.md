@@ -1,11 +1,10 @@
-# Firmware input provenance and rebuild gap
+# Pinned firmware inputs
 
-The source checkpoint preserves recipes and exact bytes' checksums, not vendor
-binary redistribution permission. The HP/Lenovo packs were extracted locally;
-no Windows installer or BIOS capsule was executed. The existing preparation
-script still requires retained oma_snap package archives. This document records
-how their selected payloads were obtained, so that dependency can be replaced
-without silently selecting different firmware.
+`../fetch-firmware.py` downloads and extracts these inputs automatically.
+`../prepare-packages.py` consumes the verified files directly. The machine needs
+no retained packages or sibling repository. Vendor installers are never executed.
+Archive pins are in `sources.json`; final files are checked against
+`hp-files.sha256` and `t14s-files.sha256`.
 
 ## HP GPU and DSP
 
@@ -23,8 +22,7 @@ Extract with 7z, without executing the archive. Under `src/Driver/`, use:
 | `1qcnspmcdm_ext_cdsp8380_7800` | `qccdsp8380.mbn`, `cdsp_dtbs.elf` |
 
 Destination is `/usr/lib/firmware/updates/qcom/x1e80100/hp/elitebook-ultra-g1q/`.
-The retained HP input notes explicitly say redistribution permission was not
-established. Obtain the original vendor terms before hosting these binaries.
+Redistribution permission for these extracted HP files has not been established. Obtain the original vendor terms before hosting these binaries.
 
 ## Lenovo cDSP replacement pair
 
@@ -40,13 +38,12 @@ Redistribution terms for this exact pair remain to be established.
 
 ## Lenovo base firmware
 
-The retained base package is `oma-snap-firmware-ubuntu 20260319.217ca6e4-2`.
-It was assembled from the firmware in `casper/minimal.squashfs` of
+The base Lenovo files are extracted from `casper/minimal.squashfs` of
 `https://cdimage.ubuntu.com/releases/26.04/release/ubuntu-26.04.1-desktop-arm64.iso`.
 The retained bootstrap manifest pins that ISO to
 `c54d196489d3c867975fb3bbb72ca52ec2e137456e305481f81096304e4d2517`.
-The original ISO is no longer in this checkout and the URL has not been revalidated
-for this checkpoint. Do not substitute another release without comparing payloads.
+The clean-input validation downloaded this ISO directly and verified its archive
+and selected-file hashes. Do not substitute another release without comparing payloads.
 
 Original extraction used xorriso to extract `/casper`, then unsquashfs on
 `minimal.squashfs` for `usr/lib/firmware` and `usr/share/doc/linux-firmware*`.
@@ -70,16 +67,27 @@ Install as `qcom/x1e80100/X1E80100-HP-ELITEBOOK-ULTRA-G1Q-tplg.bin` and carry
 `LICENSE.BSD-3-Clause`. HP UCM generation is in `../prepare-packages.py`; it checks
 three exact ALSA UCM source hashes before applying the DMIC2 change.
 
-## Manifests and next reproducibility step
+## Verification and distribution
 
-`retained-packages.sha256` identifies the four local package archives consumed
-by `prepare-packages.py`. These are package-container hashes, not substitute
-checksums for upstream downloads. `hp-files.sha256` and `t14s-files.sha256` identify
-the final firmware files independent of package metadata.
+The clean-input check runs in the Dockerfile alongside this document and uses
+only network downloads plus the checked-in scripts/manifests. It rebuilds the
+topology and verifies every selected payload byte. The ISO builder repeats those
+checks and carries source provenance and licenses in the generated packages.
+The vendor archives remain download-at-build inputs; binary redistribution terms
+for the extracted HP/Lenovo files must still be resolved before public ISO release.
+No QNN SDK or proprietary inference runtime is included.
 
-A public rebuild needs a fetch/extract stage for these pinned inputs, verification
-of the final file manifests, and a preparation mode that consumes those verified
-files instead of private package archives. It also needs the staged-root ISO
-assembly converted into a clean build. Neither is claimed complete here. Vendor
-URLs were recorded from retained provenance; this checkpoint did not redownload
-or rebuild their contents. No QNN SDK or proprietary inference runtime is included.
+## Official package-source inputs
+
+The clean-build launcher uses these official repositories:
+
+| Input | Commit | Purpose |
+| --- | --- | --- |
+| `omacom/omarchy` | `66a33c339914cfa0e41ec1fce8f198ea779b8aea` | Dragon runtime and hardware setup |
+| `omacom/omarchy-pkgs` | `e0959b06f5f5745dc67ea2f207619a096bd485fd` | Runtime/settings/Neovim recipes |
+| `omacom/omarchy-pkgs` PR 221 | `4a232b639957a251bfe9220d7d253b95fe5ae635` | Firmware extraction recipe |
+| `omacom/omarchy-pkgs` PR 222 | `3951d934ccd30b72b68f3d954a220b830fb8143d` | Kernel metadata recipe |
+
+A checked-in patch retains ARM UEFI settings and Limine dependencies in the
+source-built runtime/settings packages. The helper fails if that patch no longer
+applies. These are build-local changes, not claims that upstream merged the patch.

@@ -4,7 +4,7 @@ IMG_0398 shows linux-aarch64 7.2.6-1 successfully detecting the internal NVMe
 and its partitions, plus the I2C keyboard and touchpad. No USB mass-storage
 block device appears. Archiso waits 30 seconds for the ISO UUID, searches
 the NVMe partitions, and opens its rescue shell. This is distinct from the
-oma_snap 0.2.2 installed-system NVMe failure.
+earlier prototype 0.2.2 installed-system NVMe failure.
 
 The screenshot's device-link warning is not sufficient to diagnose the cause:
 the running HP's journal contains the same a600000/a800000 PMIC GLINK warnings.
@@ -37,7 +37,8 @@ printing the model, not USB discovery. This A/B image intentionally retains
 the same initramfs so only the DSP boot policy changes.
 
 Upstream ISO dragon was fetched before investigation and remains f97a775.
-Build using build-t14-dsp-test.sh in the native builder with the repo at /repo.
+That historical image used a staged-root repacking helper. Current clean builds
+use the [maintained build path](README.md) and its HP/T14 boot entry.
 Copy to ~/ISOs and stop. Physical confirmation is required; no USB write,
 kernel rollback or changes to the HP are included.
 

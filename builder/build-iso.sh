@@ -179,6 +179,10 @@ rm -rf "$build_cache_dir/airootfs/etc/xdg/reflector"
 # Bring in our archiso profile additions.
 cp -r /configs/* "$build_cache_dir/"
 
+if [[ ${OMARCHY_BUILD_DISABLE_SANDBOX:-0} == 1 ]]; then
+  sed -i '/^\[options\]/a DisableSandbox' "$build_cache_dir/pacman-offline.conf"
+fi
+
 # Point every GRUB path at the selected live kernel.
 for _grub_cfg in "$build_cache_dir"/grub/*.cfg; do
   [[ -e $_grub_cfg ]] || continue
@@ -249,6 +253,11 @@ if [[ ${OMARCHY_INSTALL_DEBUG:-} == "1" ]]; then
       git -c safe.directory=/omarchy-pkgs -C /omarchy-pkgs status --short 2>/dev/null | sed 's/^/omarchy_pkgs_status=/' || true
     fi
   } > "$build_cache_dir/airootfs/usr/share/omarchy-iso/build-info"
+fi
+
+# Generate board firmware packages from pinned public inputs on clean builds.
+if [[ $OMARCHY_MEDIA_TARGET == aarch64/snapdragon ]]; then
+  bash /builder/build-snapdragon-packages.sh "$PACMAN_ONLINE_CONF"
 fi
 
 # When --local-source is in effect, build omarchy* from the mounted source

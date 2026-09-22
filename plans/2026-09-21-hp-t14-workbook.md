@@ -26,7 +26,7 @@ Source inventories: [HP](../HP_Elitebook_Gaps.md),
 [T14](../T14s_Gaps.md), and the [USB A/B investigation](../experiments/hp-thinkpad/t14-usb-investigation.md).
 The earlier [bring-up plan](hp-thinkpad-dragon-bringup.md) records the original
 approach; these post-install findings replace its pre-install assumptions.
-The old oma_snap camera and NPU passes remain useful baselines for kernel 7.0,
+The old earlier prototype camera and NPU passes remain useful baselines for kernel 7.0,
 not Dragon passes.
 
 ### Owner test update — sound and controls
@@ -159,7 +159,7 @@ capture script, kernel log, process stacks, and disconnect/reconnect results.
 ### Deferred HP Fn and keyboard lighting
 
 HP Fn/media keys and keyboard lighting remain unresolved and are **deferred**.
-The earlier [HP investigation](../../oma_snap/docs/hp-unlock-fn-investigation.md)
+The earlier HP investigation (historical hardware notes)
 found an EC/WMI event path in firmware that the current DT boot does not expose
 as a working hotkey device. HID captures showed ordinary F-key reports during
 the tested combinations; changing the BIOS mode, issuing standard HID power-on,
@@ -408,3 +408,54 @@ boot-diagnostic behavioral test pass. Selected existing suite: 42/45 passed;
 three Aarch64CustomizeTest cases fail on missing `/etc/pacman.conf` in the fixture.
 The new Snapdragon prerequisites also require fixture inventory updates. These
 failures are preserved/documented rather than obscured in a checkpoint commit.
+
+## Clean Snapdragon source build
+
+Replaced retained package inputs with direct, pinned vendor acquisition and
+byte-for-byte output verification. `fetch-firmware.py` verifies HP SP162865,
+Lenovo N42QQ23W, the Ubuntu firmware source ISO and AudioReach sources, extracts
+only the board payloads, builds the topology and checks the final file manifests.
+`prepare-packages.py` now consumes that verified directory, generates the HP DMIC2
+profile and includes provenance/licenses. All references to the earlier project's
+name and external repository paths were removed from the tracked tree.
+
+Added `bin/omarchy-iso-make-snapdragon` to fetch pinned official Dragon runtime and
+package recipes and invoke the existing `--local-source` builder contract. The
+edge channel lacks the two ARM helper packages; fetch their exact upstream PR
+recipes instead. Retain a small explicit recipe patch for ARM UEFI Limine files
+and dependencies until the package channel supplies those contracts. These
+adaptations live inside the disposable build, not on either physical machine.
+
+The regular Snapdragon build now creates its hardware repository from source,
+keeps the selected published Omarchy repository, stages the tested T14 tree before
+normal `.dtbauto` UKI creation, and includes the tested HP/T14 early-DSP menu entry.
+The standard menu entry retains its DSP guard for other boards. Generic ARM
+only adds the early hardware hook if that package is present. Sandbox disabling
+is now conditional on the emulation opt-in even in the offline build config.
+
+Removed the dated staged-root/previous-ISO repacking helpers and replaced their
+active instructions with the clean-build command. Historical findings remain
+identified as history. T14 shared-power remediation remains deferred; the known
+Bluetooth-off/Wi-Fi regression is explicitly documented in the build README.
+
+Validation so far: a fresh native container downloaded all four public inputs,
+rebuilt topology, and verified all selected firmware hashes. A fresh ARM container
+built all four board packages and reproduced both T14 DTB hashes. The selected
+52-test Python suite, shell/Python/JSON syntax checks, BusyBox boot-diagnostic test,
+and both upstream ARM-helper test scripts passed. Source checkout/patch application
+was tested from public Git remotes. Final combined ARM package contract validation
+is recorded below when complete. No full ISO assembly or physical test is part of
+this build-script change; full ISO acceptance remains a separate next step.
+
+Final package validation passed: all six board/support packages built in the
+isolated ARM container, followed by the pinned Dragon runtime/settings packages.
+`builder/check-arm-packages.sh aarch64/snapdragon` passed against those actual
+archives. The first settings-only test environment omitted ImageMagick (which
+`builder/build-iso.sh` already installs); rerunning with that builder dependency
+passed. Arch Linux ARM also successfully supplied libpisp directly, so its old
+retained-package workaround is unnecessary. Logs and generated artifacts remain
+under ignored `build/clean-hardware/`; none are public source dependencies.
+The updated 52-test suite is green, including the former three fixture failures.
+Full ISO assembly, Neovim's source-package build and physical boot of this new
+assembly have not been rerun in this task; do not equate package validation with
+hardware acceptance.
