@@ -55,9 +55,9 @@ hypothesis remains unimplemented in this foundation.
 This optional native container isolates input preparation from ISO assembly:
 
 ```sh
-docker build -t omarchy-firmware-builder:local -f experiments/hp-thinkpad/inputs/Dockerfile experiments/hp-thinkpad/inputs
+docker build -t omarchy-firmware-builder:local -f builder/hardware/hp-t14/inputs/Dockerfile builder/hardware/hp-t14/inputs
 mkdir -p build/firmware-check
-docker run --rm -v "$PWD/experiments/hp-thinkpad:/hardware:ro" \
+docker run --rm -v "$PWD/builder/hardware/hp-t14:/hardware:ro" \
   -v "$PWD/build/firmware-check:/work" omarchy-firmware-builder:local --work-dir /work
 ```
 
