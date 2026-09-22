@@ -25,7 +25,8 @@
         "nvidia-utils",
         "nvidia-container-toolkit",
         "nsight-compute",
-        "nsight-systems"
+        "nsight-systems",
+        "rdma-core"
       ],
       "kernel_cmdline": ["console=tty0", "plymouth.ignore-serial-consoles"]
     },
