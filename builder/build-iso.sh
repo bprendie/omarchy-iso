@@ -29,6 +29,12 @@ esac
 : "${OMARCHY_NVIM_PACKAGE:=omarchy-nvim}"
 export OMARCHY_RUNTIME_PACKAGE OMARCHY_SETTINGS_PACKAGE OMARCHY_NVIM_PACKAGE
 
+# QEMU user emulation cannot provide pacman's Landlock syscall sandbox.
+# This opt-in affects only this disposable cross-build environment.
+if [[ ${OMARCHY_BUILD_DISABLE_SANDBOX:-0} == 1 ]]; then
+  sed -i '/^\[options\]/a DisableSandbox' /etc/pacman.conf
+fi
+
 # Packages installed into the Arch container used to build the ISO.
 pacman-key --init
 # Restore Arch Linux ARM trust after initializing the container keyring.
@@ -93,6 +99,14 @@ if [[ $ISO_ARCH == aarch64 ]]; then
     { print }
   ' "/configs/pacman-online-${OMARCHY_MIRROR}.conf" > "$PACMAN_ONLINE_CONF"
   echo "aarch64: staged $PACMAN_ONLINE_CONF without [multilib]/[arch-mact2]"
+fi
+
+if [[ ${OMARCHY_BUILD_DISABLE_SANDBOX:-0} == 1 ]]; then
+  if [[ $PACMAN_ONLINE_CONF == /configs/* ]]; then
+    cp "$PACMAN_ONLINE_CONF" /tmp/pacman-experimental-build.conf
+    PACMAN_ONLINE_CONF=/tmp/pacman-experimental-build.conf
+  fi
+  sed -i '/^\[options\]/a DisableSandbox' "$PACMAN_ONLINE_CONF"
 fi
 
 # Replace the published Omarchy repository with the mounted local repository.
