@@ -1,7 +1,7 @@
 pkgname=omarchy-hw-t14s-bluetooth-experimental
-pkgver=0.1
+pkgver=0.2
 pkgrel=1
-pkgdesc='T14s Gen 6 WCN7850 device-tree experiment for Dragon kernel 7.2.6'
+pkgdesc='T14s Gen 6 WCN7850 radio device-tree candidate for Dragon kernel 7.2.6'
 arch=('aarch64')
 license=('BSD-3-Clause')
 depends=('linux-aarch64')

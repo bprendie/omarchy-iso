@@ -47,8 +47,10 @@ other Snapdragon boards.
 The T14 Bluetooth DTB is built from the selected kernel's base tree and checked
 against the tested input/output hashes. A different kernel DTB fails the build
 for review instead of silently applying stale board data. The live UKI retains
-`.dtbauto` sections and hardware-ID selection. The Wi-Fi power-ownership
-hypothesis remains unimplemented in this foundation.
+`.dtbauto` sections and hardware-ID selection. This radio candidate adds the
+T14 Wi-Fi consumer to the WCN7850 PMU; package `0.2-1` accepts the exact kernel
+base and previously shipped Bluetooth-only DTB for migration. Its radio behavior
+and bootability remain unverified on hardware.
 
 ## Firmware-only verification
 

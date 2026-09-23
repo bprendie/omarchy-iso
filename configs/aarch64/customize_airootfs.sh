@@ -119,7 +119,7 @@ case "$(cat /root/omarchy_media_target)" in
     fi
     base_dtb=/boot/dtbs/qcom/x1e78100-lenovo-thinkpad-t14s.dtb
     echo "f21573bd4946bf7118e467326b22de228cfd64c61255ed7b51baa71185808df9  $base_dtb" | sha256sum -c -
-    echo '8061768e6ac74eaf3cc0039e060cb63c1a56d452850c7dcc6e756aa9f5cde3fb  /root/t14-bluetooth.dtb' | sha256sum -c -
+    echo '86a59910f88996672e51b302e176a2b2b81ee9b7d18009b9c64706d0a9a8a9db  /root/t14-bluetooth.dtb' | sha256sum -c -
     install -m644 /root/t14-bluetooth.dtb "$base_dtb"
     rm /root/t14-bluetooth.dtb
     /root/live-uki.sh

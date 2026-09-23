@@ -25,7 +25,7 @@ mkdir -p "$bt"
 cp /hardware/t14-bluetooth-package/* "$bt/"
 dtc -@ -I dts -O dtb -o "$work/t14.dtbo" /hardware/t14-bluetooth.dtso
 fdtoverlay -i "$base_dtb" -o "$bt/x1e78100-lenovo-thinkpad-t14s.dtb" "$work/t14.dtbo"
-echo "8061768e6ac74eaf3cc0039e060cb63c1a56d452850c7dcc6e756aa9f5cde3fb  $bt/x1e78100-lenovo-thinkpad-t14s.dtb" | sha256sum -c -
+echo "86a59910f88996672e51b302e176a2b2b81ee9b7d18009b9c64706d0a9a8a9db  $bt/x1e78100-lenovo-thinkpad-t14s.dtb" | sha256sum -c -
 # Live image gets the same tree through customize_airootfs, before ukify.
 install -Dm644 "$bt/x1e78100-lenovo-thinkpad-t14s.dtb" /var/cache/airootfs/root/t14-bluetooth.dtb
 id omarchy-builder &>/dev/null || useradd -m omarchy-builder
