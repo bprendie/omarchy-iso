@@ -159,11 +159,12 @@ Dragon's exact 7.2.6 CAMSS driver uses the integrated CSIPHY ABI. Its
 `hamoa.dtsi` has no CAMCC, CCI or CAMSS nodes, although the drivers are modules.
 The [March 2025 v6 series](https://patchew.org/linux/20250314-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v6-0-edcb2cfc3122@linaro.org/)
 describes this ABI, but targets the older `x1e80100.dtsi` filename. The T14
-candidate in `builder/hardware/hp-t14/t14-camera.dtso` carries those SoC nodes
-into the current tree, then adds the later upstream OV02C10/PM8010 board wiring
-and the integrated-PHY lane map seen in the successful Ubuntu 7.0 tree. It
+candidate in `builder/hardware/hp-t14/x1e80100-camera.dtso` carries shared SoC
+nodes into the current tree; `t14-camera.dtso` adds the later upstream
+OV02C10/PM8010 board wiring and the integrated-PHY lane map seen in the
+successful Ubuntu 7.0 tree. It
 compiles and overlays on Dragon's exact pinned 7.2.6 radio DTB; final SHA256:
-`54700a05112b0ac1a26051c8fed9015764b17da5b86b59de7af4e4b3de03c9ac`.
+`93ffd63948e6ed79a2c459ab1a5079d848f06d0437352a978ee8322a0c3abf37`.
 This is DT/source validation only; no camera node or frames have been observed
 on a machine booted with this candidate yet.
 

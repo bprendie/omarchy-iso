@@ -46,11 +46,15 @@ camera=$work/hardware/omarchy-hw-t14s-camera-experimental
 mkdir -p "$camera"
 cp /hardware/t14-camera-package/* "$camera/"
 cpp -P -nostdinc -undef -D__DTS__ -I "$work/headers/$header_root" -x assembler-with-cpp \
+  /hardware/x1e80100-camera.dtso > "$work/x1e80100-camera.dts"
+dtc -@ -I dts -O dtb -o "$work/x1e80100-camera.dtbo" "$work/x1e80100-camera.dts"
+cpp -P -nostdinc -undef -D__DTS__ -I "$work/headers/$header_root" -x assembler-with-cpp \
   /hardware/t14-camera.dtso > "$work/t14-camera.dts"
 dtc -@ -I dts -O dtb -o "$work/t14-camera.dtbo" "$work/t14-camera.dts"
 fdtoverlay -i "$bt/x1e78100-lenovo-thinkpad-t14s.dtb" \
-  -o "$camera/x1e78100-lenovo-thinkpad-t14s.dtb" "$work/t14-camera.dtbo"
-echo "54700a05112b0ac1a26051c8fed9015764b17da5b86b59de7af4e4b3de03c9ac  $camera/x1e78100-lenovo-thinkpad-t14s.dtb" | sha256sum -c -
+  -o "$camera/x1e78100-lenovo-thinkpad-t14s.dtb" \
+  "$work/x1e80100-camera.dtbo" "$work/t14-camera.dtbo"
+echo "93ffd63948e6ed79a2c459ab1a5079d848f06d0437352a978ee8322a0c3abf37  $camera/x1e78100-lenovo-thinkpad-t14s.dtb" | sha256sum -c -
 install -Dm644 "$camera/x1e78100-lenovo-thinkpad-t14s.dtb" /var/cache/airootfs/root/t14-camera.dtb
 id omarchy-builder &>/dev/null || useradd -m omarchy-builder
 for source in "$work"/hardware/*; do

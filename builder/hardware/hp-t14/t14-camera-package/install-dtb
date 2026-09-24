@@ -6,7 +6,7 @@ trial_dtb=/usr/share/omarchy-hw-t14s-camera-experimental/x1e78100-lenovo-thinkpa
 base_sha=f21573bd4946bf7118e467326b22de228cfd64c61255ed7b51baa71185808df9
 old_radio_sha=8061768e6ac74eaf3cc0039e060cb63c1a56d452850c7dcc6e756aa9f5cde3fb
 radio_sha=86a59910f88996672e51b302e176a2b2b81ee9b7d18009b9c64706d0a9a8a9db
-candidate_sha=54700a05112b0ac1a26051c8fed9015764b17da5b86b59de7af4e4b3de03c9ac
+candidate_sha=93ffd63948e6ed79a2c459ab1a5079d848f06d0437352a978ee8322a0c3abf37
 
 if ! mountpoint -q /boot; then
   echo 'T14 camera DTB: /boot is not mounted' >&2
