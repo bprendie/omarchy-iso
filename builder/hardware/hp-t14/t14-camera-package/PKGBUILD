@@ -1,6 +1,6 @@
 pkgname=omarchy-hw-t14s-camera-experimental
 pkgver=0.1
-pkgrel=1
+pkgrel=2
 pkgdesc='T14s Gen 6 OV02C10 camera device-tree candidate for Dragon kernel 7.2.6'
 arch=('aarch64')
 license=('BSD-3-Clause')

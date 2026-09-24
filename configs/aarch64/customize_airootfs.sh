@@ -120,7 +120,7 @@ case "$(cat /root/omarchy_media_target)" in
     base_dtb=/boot/dtbs/qcom/x1e78100-lenovo-thinkpad-t14s.dtb
     echo "f21573bd4946bf7118e467326b22de228cfd64c61255ed7b51baa71185808df9  $base_dtb" | sha256sum -c -
     echo '86a59910f88996672e51b302e176a2b2b81ee9b7d18009b9c64706d0a9a8a9db  /root/t14-bluetooth.dtb' | sha256sum -c -
-    echo '93ffd63948e6ed79a2c459ab1a5079d848f06d0437352a978ee8322a0c3abf37  /root/t14-camera.dtb' | sha256sum -c -
+    echo 'f240d5d824800dde1c731cb660fa0d164dfa68fccfafc8630474f9bf6a6697b0  /root/t14-camera.dtb' | sha256sum -c -
     install -m644 /root/t14-camera.dtb "$base_dtb"
     rm /root/t14-bluetooth.dtb
     rm /root/t14-camera.dtb

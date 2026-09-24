@@ -6,7 +6,8 @@ trial_dtb=/usr/share/omarchy-hw-t14s-camera-experimental/x1e78100-lenovo-thinkpa
 base_sha=f21573bd4946bf7118e467326b22de228cfd64c61255ed7b51baa71185808df9
 old_radio_sha=8061768e6ac74eaf3cc0039e060cb63c1a56d452850c7dcc6e756aa9f5cde3fb
 radio_sha=86a59910f88996672e51b302e176a2b2b81ee9b7d18009b9c64706d0a9a8a9db
-candidate_sha=93ffd63948e6ed79a2c459ab1a5079d848f06d0437352a978ee8322a0c3abf37
+old_camera_sha=93ffd63948e6ed79a2c459ab1a5079d848f06d0437352a978ee8322a0c3abf37
+candidate_sha=f240d5d824800dde1c731cb660fa0d164dfa68fccfafc8630474f9bf6a6697b0
 
 if ! mountpoint -q /boot; then
   echo 'T14 camera DTB: /boot is not mounted' >&2
@@ -27,7 +28,7 @@ current_sha=${current_sha%% *}
 if [ "$current_sha" = "$candidate_sha" ]; then
   exit 0
 fi
-if [ "$current_sha" != "$base_sha" ] && [ "$current_sha" != "$old_radio_sha" ] && [ "$current_sha" != "$radio_sha" ]; then
+if [ "$current_sha" != "$base_sha" ] && [ "$current_sha" != "$old_radio_sha" ] && [ "$current_sha" != "$radio_sha" ] && [ "$current_sha" != "$old_camera_sha" ]; then
   echo "T14 camera DTB: unknown kernel tree ($current_sha); leaving it in place" >&2
   exit 0
 fi

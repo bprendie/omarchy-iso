@@ -51,7 +51,8 @@ dtc -@ -I dts -O dtb -o "$work/t14-camera.dtbo" "$work/t14-camera.dts"
 fdtoverlay -i "$bt/x1e78100-lenovo-thinkpad-t14s.dtb" \
   -o "$camera/x1e78100-lenovo-thinkpad-t14s.dtb" \
   "$work/x1e80100-camera.dtbo" "$work/t14-camera.dtbo"
-echo "93ffd63948e6ed79a2c459ab1a5079d848f06d0437352a978ee8322a0c3abf37  $camera/x1e78100-lenovo-thinkpad-t14s.dtb" | sha256sum -c -
+echo "f240d5d824800dde1c731cb660fa0d164dfa68fccfafc8630474f9bf6a6697b0  $camera/x1e78100-lenovo-thinkpad-t14s.dtb" | sha256sum -c -
+python /hardware/validate-camera-regulators.py "$camera/x1e78100-lenovo-thinkpad-t14s.dtb"
 install -Dm644 "$camera/x1e78100-lenovo-thinkpad-t14s.dtb" /var/cache/airootfs/root/t14-camera.dtb
 hp_base_dtb=$base/boot/dtbs/qcom/x1e80100-hp-elitebook-ultra-g1q.dtb
 echo "4116ab5c1cac1e694ab56e19c3c105374bf205eab55bd92b6cd234d42d2a271b  $hp_base_dtb" | sha256sum -c -
@@ -64,6 +65,7 @@ dtc -@ -I dts -O dtb -o "$work/hp-camera.dtbo" "$work/hp-camera.dts"
 fdtoverlay -i "$hp_base_dtb" -o "$hp_camera/x1e80100-hp-elitebook-ultra-g1q.dtb" \
   "$work/x1e80100-camera.dtbo" "$work/hp-camera.dtbo"
 echo "090e8e46693c61bf0236df43060db55ac6549d15ee2cd3c234c8de57c4b4e962  $hp_camera/x1e80100-hp-elitebook-ultra-g1q.dtb" | sha256sum -c -
+python /hardware/validate-camera-regulators.py "$hp_camera/x1e80100-hp-elitebook-ultra-g1q.dtb"
 install -Dm644 "$hp_camera/x1e80100-hp-elitebook-ultra-g1q.dtb" /var/cache/airootfs/root/hp-camera.dtb
 id omarchy-builder &>/dev/null || useradd -m omarchy-builder
 for source in "$work"/hardware/*; do
