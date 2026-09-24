@@ -230,8 +230,9 @@ cache; preserve Dragon's normal UKI and build contracts. Copy any resulting ISO
 to `~/ISOs`, provide its path/checksum and stop for owner installation. No ISO
 has been built from the camera candidate yet.
 
-The launcher now mounts a persistent Snapdragon hardware cache at
-`~/.cache/omarchy/iso_edge/aarch64/snapdragon/hardware` for the build container.
+The launcher now mounts the persistent Snapdragon `downloads`, `firmware`, and
+`kernel` cache directories under
+`~/.cache/omarchy/iso_edge/aarch64/snapdragon/hardware` into the build container.
 The previous verified vendor downloads, extracted firmware and kernel package
 were copied there from the September 23 snapshot using filesystem reflinks.
 The fetch script still checks their pinned hashes before reuse; a fresh build

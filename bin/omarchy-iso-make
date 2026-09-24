@@ -192,8 +192,10 @@ if [[ -z "$NO_CACHE" ]]; then
   DOCKER_ARGS+=(-v "$OFFLINE_REPO_BUILD_CACHE_DIR:/var/cache/airootfs/var/cache/omarchy")
   if [[ $OMARCHY_MEDIA_TARGET == aarch64/snapdragon ]]; then
     HARDWARE_BUILD_CACHE_DIR="$HOME/.cache/omarchy/iso_${OMARCHY_MIRROR}/${OMARCHY_MEDIA_TARGET}/hardware"
-    mkdir -p "$HARDWARE_BUILD_CACHE_DIR"
-    DOCKER_ARGS+=(-v "$HARDWARE_BUILD_CACHE_DIR:/var/cache/omarchy-hardware")
+    for cache_part in downloads firmware kernel; do
+      mkdir -p "$HARDWARE_BUILD_CACHE_DIR/$cache_part"
+      DOCKER_ARGS+=(-v "$HARDWARE_BUILD_CACHE_DIR/$cache_part:/var/cache/omarchy-hardware/$cache_part")
+    done
   fi
 else
   # The locally cached :latest image is a cache too — docker run never
