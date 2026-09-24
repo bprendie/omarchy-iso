@@ -17,5 +17,16 @@ is part of this package.
 
 A new kernel DTB hash is not overwritten automatically. Rebuild and revalidate
 the sensor module and board overlay against that kernel before updating the pin.
-The current Dragon 7.2.6 camera candidate has passed only a static DTB overlay
-and module build check. It needs physical enumeration and bounded frame capture.
+On September 24, the Dragon 7.2.6 camera ISO installed and booted on the HP.
+OV05C10 enumerated, raw frame capture passed, and normal-user processed capture
+at 2880x1808 delivered about 30 fps. PipeWire delivered 720p frames, and the owner
+confirmed a usable live picture with correct orientation and colours.
+
+The shared early-hardware package 0.3-2 grants the active desktop user access to
+`/dev/dma_heap/system` through udev/logind. CMA heaps remain root-only. This rule
+was tested locally on the HP camera install; the later ISO packages the same
+rule, but a fresh HP install of that exact ISO has not yet been confirmed.
+
+Sensor calibration, static delays/helper support, repeated cold-start capture
+and broader application testing remain follow-ups. See the [combined camera
+status](../README.md#rgb-camera-support) for T14 results and limitations.

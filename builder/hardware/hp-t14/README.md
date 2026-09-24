@@ -49,8 +49,9 @@ against the tested input/output hashes. A different kernel DTB fails the build
 for review instead of silently applying stale board data. The live UKI retains
 `.dtbauto` sections and hardware-ID selection. This radio candidate adds the
 T14 Wi-Fi consumer to the WCN7850 PMU; package `0.2-1` accepts the exact kernel
-base and previously shipped Bluetooth-only DTB for migration. Its radio behavior
-and bootability remain unverified on hardware.
+base and previously shipped Bluetooth-only DTB for migration. The radio image
+and subsequent camera image have installed and booted on T14.
+Radio acceptance remains incomplete; see the hardware status below.
 
 ## Firmware-only verification
 
@@ -79,18 +80,54 @@ Speakers work on both. HP speech capture is owner-confirmed with one active PCM
 channel; T14 microphone and media keys work. Bluetooth headphone playback works
 on both. Automatic reconnection remains incomplete.
 
-**Known T14 regression:** blocking Bluetooth drops the Wi-Fi PCIe link. The
+**Earlier T14 regression:** blocking Bluetooth dropped the Wi-Fi PCIe link. The
 isolated test captured Wi-Fi removal and kernel waits. A warm reboot left Wi-Fi
-absent; power-off/start restored it. HP radio toggles work independently. Live
-inspection finds both Wi-Fi and Bluetooth consumers on HP's WCN PMU, but only
-Bluetooth on T14. That missing dependency remains under investigation. This
-build-workflow change does not claim to fix it.
+absent; power-off/start restored it. HP radio toggles work independently. The
+current T14 candidate adds the missing Wi-Fi consumer to the shared PMU;
+one tested Bluetooth off/on cycle preserved Wi-Fi. This is not full radio
+acceptance. A separate LDAC-associated freeze/reset was reproduced in earlier
+testing; the owner later reported the four-minute reset absent on the radio
+build. Reboot, toggle, codec and resume coverage remain follow-ups.
 
-Camera, cDSP/NPU, suspend and battery validation remain open; HP function keys
-are deferred. The pull request records physical results and remaining gaps;
+RGB cameras now pass capture and owner preview as detailed below. cDSP/NPU,
+suspend and battery validation remain open; HP function keys are deferred. The
+pull request records physical results and remaining gaps;
 hardware investigations can continue in a Dragon discussion.
 
 The command above is the maintained build path.
+
+## RGB camera support
+
+The camera integration is pinned to Dragon's Arch Linux ARM kernel **7.2.6-1**.
+It compiles shared X1E80100 camera blocks once, applies separate board overlays,
+and uses the existing UKI hardware-selection and installed-kernel update paths.
+T14 uses the kernel's OV02C10 driver; HP includes the attributed GPL-2.0
+[OV05C10 sensor module](hp-camera-package/README.md). Kernel and DTB pins fail
+closed so a rolling kernel update requires explicit review.
+
+| Board | September 24 physical result | Remaining acceptance |
+| --- | --- | --- |
+| ThinkPad T14s Gen 6 | Corrected ISO installs and boots; normal-user 1920x1092 processed capture and 720p PipeWire capture pass; owner confirms a great live picture. | First PipeWire capture timed out, while later default and alternate buffer-pool runs passed. Cold first-use reliability, sensor crop API, calibration/helper support and broader application tests remain. |
+| HP EliteBook Ultra G1q | Camera ISO installs and boots; raw and 2880x1808 processed capture pass; 720p PipeWire and owner-visible preview pass. | Access rule tested locally on the preceding camera install. Fresh installation of the latest combined ISO, repeated cold-start capture and sensor calibration/helper support remain. |
+
+The shared early package **0.3-2** grants the active local user access to the
+system DMA heap through udev/logind. It leaves CMA heaps private; normal-user
+software-ISP output buffers no longer exhaust the small CMA pool.
+
+The first T14 camera overlay accidentally added an unused LDO7 to PMIC C, whose
+PM8550VE provider only supports LDO1–3. The corrected **0.1-2** camera package
+removes that entry and preserves all existing properties from the working radio
+tree. A build check rejects unsupported PM8550VE/PM8010 regulator children.
+Its install hook accepts the reviewed base, radio and faulty camera trees for
+migration and leaves unknown kernel trees untouched.
+
+The corrected combined ISO was assembled incrementally from the existing camera
+build, with native `ukify` and SquashFS compression. All UKI section payloads
+except the T14 DTB were preserved; the live camera-access package and offline
+T14 camera package were updated. Boot layout and final ISO payload checks passed,
+as did the shell checks and 124 Python tests. The physical T14 result confirms
+this candidate; it does not establish that a new rolling, from-scratch build
+will reproduce the same package set.
 
 ## Validation of the clean-input workflow
 
