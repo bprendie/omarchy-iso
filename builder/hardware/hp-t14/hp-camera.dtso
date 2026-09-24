@@ -1,0 +1,102 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// HP EliteBook Ultra G1q OV05C10 camera wiring for Dragon kernel 7.2.6.
+// Apply after x1e80100-camera.dtso.
+// Board wiring follows the physically validated Ubuntu 7.0 integration.
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/clock/qcom,x1e80100-camcc.h>
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+
+&{/soc@0/rsc@17500000} {
+    regulators-8 {
+        compatible = "qcom,pm8010-rpmh-regulators";
+        qcom,pmic-id = "m";
+        vdd-l3-l4-supply = <&vreg_s4c_1p8>;
+
+        hp_camera_l3m_1p8: ldo3 {
+            regulator-name = "hp_camera_l3m_1p8";
+            regulator-min-microvolt = <1800000>;
+            regulator-max-microvolt = <1800000>;
+            regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+        };
+    };
+};
+
+&tlmm {
+    hp_camera_default: hp-camera-default-state {
+        mclk-pins {
+            pins = "gpio100";
+            function = "cam_aon";
+            drive-strength = <16>;
+            bias-disable;
+        };
+        reset-pins {
+            pins = "gpio237";
+            function = "gpio";
+            drive-strength = <2>;
+            bias-disable;
+        };
+        enable-pins {
+            pins = "gpio50";
+            function = "gpio";
+            drive-strength = <2>;
+            bias-disable;
+        };
+    };
+};
+
+&camss {
+    vdd-csiphy-0p8-supply = <&vreg_l2c_0p8>;
+    vdd-csiphy-1p2-supply = <&vreg_l1c_1p2>;
+    status = "okay";
+    ports {
+        #address-cells = <1>;
+        #size-cells = <0>;
+        port@3 {
+            reg = <3>;
+            #address-cells = <1>;
+            #size-cells = <0>;
+            camss_csiphy4_ep: endpoint@0 {
+                reg = <0>;
+                clock-lanes = <7>;
+                data-lanes = <0 1>;
+                remote-endpoint = <&hp_ov05c10_ep>;
+            };
+        };
+    };
+};
+
+&cci1 {
+    #address-cells = <1>;
+    #size-cells = <0>;
+    status = "okay";
+    i2c-bus@1 {
+        reg = <1>;
+        #address-cells = <1>;
+        #size-cells = <0>;
+        clock-frequency = <400000>;
+        camera@10 {
+            compatible = "ovti,ov05c10";
+            reg = <0x10>;
+            reset-gpios = <&tlmm 237 GPIO_ACTIVE_LOW>;
+            enable-gpios = <&tlmm 50 GPIO_ACTIVE_HIGH>;
+            pinctrl-names = "default";
+            pinctrl-0 = <&hp_camera_default>;
+            clocks = <&camcc CAM_CC_MCLK4_CLK>;
+            assigned-clocks = <&camcc CAM_CC_MCLK4_CLK>;
+            assigned-clock-rates = <19200000>;
+            dovdd-supply = <&hp_camera_l3m_1p8>;
+            orientation = <0>;
+            rotation = <0>;
+            port {
+                hp_ov05c10_ep: endpoint {
+                    data-lanes = <1 2>;
+                    link-frequencies = /bits/ 64 <900000000 480000000>;
+                    remote-endpoint = <&camss_csiphy4_ep>;
+                };
+            };
+        };
+    };
+};

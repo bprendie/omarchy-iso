@@ -1,0 +1,4 @@
+/pkg/
+/src/
+/*.pkg.tar.*
+/x1e80100-hp-elitebook-ultra-g1q.dtb

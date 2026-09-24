@@ -124,6 +124,11 @@ case "$(cat /root/omarchy_media_target)" in
     install -m644 /root/t14-camera.dtb "$base_dtb"
     rm /root/t14-bluetooth.dtb
     rm /root/t14-camera.dtb
+    hp_base_dtb=/boot/dtbs/qcom/x1e80100-hp-elitebook-ultra-g1q.dtb
+    echo "4116ab5c1cac1e694ab56e19c3c105374bf205eab55bd92b6cd234d42d2a271b  $hp_base_dtb" | sha256sum -c -
+    echo '090e8e46693c61bf0236df43060db55ac6549d15ee2cd3c234c8de57c4b4e962  /root/hp-camera.dtb' | sha256sum -c -
+    install -m644 /root/hp-camera.dtb "$hp_base_dtb"
+    rm /root/hp-camera.dtb
     /root/live-uki.sh
     ;;
   aarch64/generic) ;;

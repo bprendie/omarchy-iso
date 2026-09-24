@@ -74,6 +74,7 @@
       ],
       "packages": [
         "omarchy-hw-hp-experimental",
+        "omarchy-hw-hp-camera-experimental",
         "libcamera-tools",
         "pipewire-libcamera",
         "gst-plugin-libcamera"

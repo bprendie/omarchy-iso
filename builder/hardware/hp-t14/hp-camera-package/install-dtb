@@ -1,0 +1,37 @@
+#!/bin/sh
+set -eu
+
+board_dtb=/boot/dtbs/qcom/x1e80100-hp-elitebook-ultra-g1q.dtb
+trial_dtb=/usr/share/omarchy-hw-hp-camera-experimental/x1e80100-hp-elitebook-ultra-g1q.dtb
+base_sha=4116ab5c1cac1e694ab56e19c3c105374bf205eab55bd92b6cd234d42d2a271b
+candidate_sha=090e8e46693c61bf0236df43060db55ac6549d15ee2cd3c234c8de57c4b4e962
+
+if ! mountpoint -q /boot; then
+  echo 'HP camera DTB: /boot is not mounted' >&2
+  exit 1
+fi
+if [ ! -f "$board_dtb" ]; then
+  echo "HP camera DTB: missing $board_dtb" >&2
+  exit 1
+fi
+source_sha=$(sha256sum "$trial_dtb")
+source_sha=${source_sha%% *}
+if [ "$source_sha" != "$candidate_sha" ]; then
+  echo 'HP camera DTB: package payload hash mismatch' >&2
+  exit 1
+fi
+current_sha=$(sha256sum "$board_dtb")
+current_sha=${current_sha%% *}
+if [ "$current_sha" = "$candidate_sha" ]; then
+  exit 0
+fi
+if [ "$current_sha" != "$base_sha" ]; then
+  echo "HP camera DTB: unknown kernel tree ($current_sha); leaving it in place" >&2
+  exit 0
+fi
+tmp="$board_dtb.omarchy-candidate.$$"
+trap 'rm -f "$tmp"' EXIT HUP INT TERM
+install -m644 "$trial_dtb" "$tmp"
+mv -f "$tmp" "$board_dtb"
+trap - EXIT HUP INT TERM
+echo 'HP camera DTB: installed camera candidate'

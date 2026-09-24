@@ -1,0 +1,56 @@
+pkgname=omarchy-hw-hp-camera-experimental
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='HP EliteBook Ultra G1q OV05C10 camera candidate for Dragon kernel 7.2.6'
+arch=('aarch64')
+license=('GPL-2.0-only' 'BSD-3-Clause')
+depends=('linux-aarch64=7.2.6-1')
+makedepends=('linux-aarch64-headers=7.2.6-1' 'kmod')
+install=hp-camera.install
+options=('!strip' '!debug')
+kernel_release=7.2.6-1-aarch64-ARCH
+source=(
+  'ov05c10.c'
+  'Makefile'
+  'x1e80100-hp-elitebook-ultra-g1q.dtb'
+  'install-dtb'
+  '85-hp-camera-dtb.hook'
+  'hp-camera.install'
+  'README.md'
+)
+sha256sums=(
+  '3c7837459fc6c17680b29e54e06ed1bfa8c561a0df257697b8dd67525258bb05'
+  'b8910290a055fde75865bdeadbaddd66805a1206144a8fe2cc23ee2bf5f8e698'
+  '090e8e46693c61bf0236df43060db55ac6549d15ee2cd3c234c8de57c4b4e962'
+  '8b82d23d9d6901c871d2e6bf1b11097840531bb69cfd377387041308c96896d7'
+  '86d6c926feb20f18662ae89769d4d273898ad95c65993bf892826e2f313fe86d'
+  '84d5a24a5891675dd76b978c0d74a4e89ad43f856a9d6dccfea96612fb0b62c4'
+  'bf8e30c98d3fda4c267ff45bb7a1705025c5604cd47adbbb4d4daf2425404055'
+)
+
+build() {
+  local headers="/usr/lib/modules/$kernel_release/build"
+  [[ -f "$headers/Module.symvers" ]] || {
+    echo "HP camera: matching kernel headers are unavailable" >&2
+    return 1
+  }
+  make -C "$headers" M="$srcdir" modules
+  case $(modinfo -F vermagic "$srcdir/ov05c10.ko") in
+    "$kernel_release "*) ;;
+    *) echo 'HP camera: module ABI does not match the pinned kernel' >&2; return 1 ;;
+  esac
+  modinfo -F alias "$srcdir/ov05c10.ko" | grep -Fq 'of:N*T*Covti,ov05c10'
+}
+
+package() {
+  install -Dm644 "$srcdir/ov05c10.ko" \
+    "$pkgdir/usr/lib/modules/$kernel_release/updates/omarchy-hw-hp-camera/ov05c10.ko"
+  install -Dm644 "$srcdir/x1e80100-hp-elitebook-ultra-g1q.dtb" \
+    "$pkgdir/usr/share/$pkgname/x1e80100-hp-elitebook-ultra-g1q.dtb"
+  install -Dm755 "$srcdir/install-dtb" \
+    "$pkgdir/usr/lib/$pkgname/install-dtb"
+  install -Dm644 "$srcdir/85-hp-camera-dtb.hook" \
+    "$pkgdir/usr/share/libalpm/hooks/85-hp-camera-dtb.hook"
+  install -Dm644 "$srcdir/README.md" \
+    "$pkgdir/usr/share/doc/$pkgname/README.md"
+}

@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Path
+Target = boot/dtbs/qcom/x1e80100-hp-elitebook-ultra-g1q.dtb
+
+[Action]
+Description = Restore HP EliteBook camera device tree before UKI rebuild
+When = PostTransaction
+Exec = /usr/lib/omarchy-hw-hp-camera-experimental/install-dtb

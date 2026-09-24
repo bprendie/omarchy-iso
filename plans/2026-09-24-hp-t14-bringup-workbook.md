@@ -38,7 +38,7 @@ worktrees; no ISO has been built from them. Preserve the build caches.
 | T14 keyboard lighting | Physical pre-OS operation reported; Linux key/OSD path responds. Normal privileged LED writes do not change reported brightness. | Trace identifies a driver/EC interaction gap; obtain this firmware's intended control sequence before changing the driver. |
 | Suspend, wake, charge thresholds and battery | Interfaces exist; previous logs contain suspend/resume and a USB-C retimer warning. | Existence of events is not a measured power/resume pass. Keep both boards' idle, sleep-drain, charging and peripheral-restoration checks open. |
 | T14 RGB camera | OV02C10/CCI/CAMSS modules and userspace installed; no media/video devices. | Missing shared SoC camera DT infrastructure as well as board sensor/power wiring; use compatible upstream series. |
-| HP RGB camera | No media/video devices in today's read-only check. | Share camera infrastructure work; retain separate OV05C10 driver and HP graph requirements. |
+| HP RGB camera | No media/video devices on the installed image. A separate OV05C10 module and HP DTB candidate now compile against pinned 7.2.6. | Boot candidate; prove sensor enumeration, frames and PipeWire preview. |
 | cDSP / NPU, both boards | Firmware runs, but no cDSP FastRPC device exists. | Today's T14 retry directly captures channel-open timeout. Restore transport before calculator/validator/HTP inference. |
 | T14 other input, GPU, USB/docks, external displays, TPM | Mostly enumeration or earlier limited checks. | TrackPoint hardware condition, full controls, real rendering, per-port use and security capabilities need their own checks. |
 | HP Fn keys / keyboard lighting | Owner explicitly deferred the deeper issue. | Remains deferred; do not conflate it with the T14 EC driver. |
@@ -167,6 +167,14 @@ compiles and overlays on Dragon's exact pinned 7.2.6 radio DTB; final SHA256:
 `93ffd63948e6ed79a2c459ab1a5079d848f06d0437352a978ee8322a0c3abf37`.
 This is DT/source validation only; no camera node or frames have been observed
 on a machine booted with this candidate yet.
+
+The HP board overlay now uses that same shared X1E SoC block and supplies only
+HP's PM8010 LDO3_M, GPIO100/237/50, OV05C10 at CCI1 bus 1 address `0x10`, and
+CSI4 graph. The GPL OV05C10 module builds against pinned 7.2.6 headers with
+matching vermagic and OF alias. The generated HP DTB SHA256 is
+`090e8e46693c61bf0236df43060db55ac6549d15ee2cd3c234c8de57c4b4e962`.
+The package and live image retain exact-hash guards. This also needs a physical
+boot and frame test; it is not yet a working-camera claim.
 
 Next: select and pin a consistent driver/binding/DT set against Dragon's kernel;
 prepare the shared SoC portion once, then separate T14 and HP board patches.

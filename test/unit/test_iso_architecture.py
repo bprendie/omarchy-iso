@@ -122,7 +122,10 @@ class Aarch64CustomizeTest(unittest.TestCase):
         (self.root / "boot/Image").write_bytes(b"kernel")
         (self.root / "etc/pacman.conf").write_text("[options]\nDisableSandbox\n")
         (self.root / "boot/dtbs/qcom/x1e78100-lenovo-thinkpad-t14s.dtb").write_bytes(b"base")
+        (self.root / "boot/dtbs/qcom/x1e80100-hp-elitebook-ultra-g1q.dtb").write_bytes(b"hp base")
         (self.root / "root/t14-bluetooth.dtb").write_bytes(b"board")
+        (self.root / "root/t14-camera.dtb").write_bytes(b"camera board")
+        (self.root / "root/hp-camera.dtb").write_bytes(b"hp camera board")
         (self.root / "etc/mkinitcpio.d/linux-t2.preset").touch()
         script = (ROOT / "configs/aarch64/customize_airootfs.sh").read_text()
         # Redirect the production script's absolute live-root paths into a
@@ -165,7 +168,8 @@ class Aarch64CustomizeTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertTrue((self.root / "uki-built").exists())
         self.assertNotIn("DisableSandbox", (self.root / "etc/pacman.conf").read_text())
-        self.assertEqual((self.root / "boot/dtbs/qcom/x1e78100-lenovo-thinkpad-t14s.dtb").read_bytes(), b"board")
+        self.assertEqual((self.root / "boot/dtbs/qcom/x1e78100-lenovo-thinkpad-t14s.dtb").read_bytes(), b"camera board")
+        self.assertEqual((self.root / "boot/dtbs/qcom/x1e80100-hp-elitebook-ultra-g1q.dtb").read_bytes(), b"hp camera board")
         self.assertEqual((self.root / "boot/vmlinuz-linux-aarch64").read_bytes(), b"kernel")
         self.assertFalse((self.root / "etc/mkinitcpio.d/linux-t2.preset").exists())
 
