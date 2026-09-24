@@ -229,6 +229,14 @@ cache; preserve Dragon's normal UKI and build contracts. Copy any resulting ISO
 to `~/ISOs`, provide its path/checksum and stop for owner installation. No ISO
 has been built from the camera candidate yet.
 
+The launcher now mounts a persistent Snapdragon hardware cache at
+`~/.cache/omarchy/iso_edge/aarch64/snapdragon/hardware` for the build container.
+The previous verified vendor downloads, extracted firmware and kernel package
+were copied there from the September 23 snapshot using filesystem reflinks.
+The fetch script still checks their pinned hashes before reuse; a fresh build
+does not need to re-download the 4.15 GB Ubuntu ISO or rebuild the extracted
+firmware unless a source pin changes.
+
 Evidence: `build/t14-gap-review-20260924/`, with checksums. These local logs are
 not a public payload. The camera overlay and its build integration are staged
 in an isolated worktree; neither board is running that candidate yet.
