@@ -96,6 +96,7 @@
       "packages": [
         "omarchy-hw-t14s-experimental",
         "omarchy-hw-t14s-bluetooth-experimental",
+        "omarchy-hw-t14s-camera-experimental",
         "libcamera-tools",
         "pipewire-libcamera",
         "gst-plugin-libcamera"

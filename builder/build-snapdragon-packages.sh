@@ -28,6 +28,30 @@ fdtoverlay -i "$base_dtb" -o "$bt/x1e78100-lenovo-thinkpad-t14s.dtb" "$work/t14.
 echo "86a59910f88996672e51b302e176a2b2b81ee9b7d18009b9c64706d0a9a8a9db  $bt/x1e78100-lenovo-thinkpad-t14s.dtb" | sha256sum -c -
 # Live image gets the same tree through customize_airootfs, before ukify.
 install -Dm644 "$bt/x1e78100-lenovo-thinkpad-t14s.dtb" /var/cache/airootfs/root/t14-bluetooth.dtb
+
+# The camera tree extends the pinned radio tree. Compile against the exact
+# kernel's DT bindings so a changed kernel cannot silently alter cell values.
+pacman --config "$config" --noconfirm -Sw --cachedir "$work/kernel" linux-aarch64-headers
+headers=$(pacman --config "$config" -Sp --print-format '%n %f' linux-aarch64-headers | awk '$1 == "linux-aarch64-headers" { print $2 }')
+[[ -n $headers && $headers != *$'\n'* ]]
+kernel_release=${kernel#linux-aarch64-}
+kernel_release=${kernel_release%-aarch64.pkg.tar.*}
+[[ $headers == "linux-aarch64-headers-$kernel_release-aarch64.pkg.tar."* ]]
+header_path=$(bsdtar -tf "$work/kernel/$headers" | awk '/\/build\/include\/dt-bindings\/clock\/qcom,x1e80100-camcc.h$/ { if (!found) { print; found=1 } }')
+[[ -n $header_path ]]
+header_root=${header_path%/dt-bindings/clock/qcom,x1e80100-camcc.h}
+mkdir -p "$work/headers"
+bsdtar -xf "$work/kernel/$headers" -C "$work/headers" "$header_root/dt-bindings"
+camera=$work/hardware/omarchy-hw-t14s-camera-experimental
+mkdir -p "$camera"
+cp /hardware/t14-camera-package/* "$camera/"
+cpp -P -nostdinc -undef -D__DTS__ -I "$work/headers/$header_root" -x assembler-with-cpp \
+  /hardware/t14-camera.dtso > "$work/t14-camera.dts"
+dtc -@ -I dts -O dtb -o "$work/t14-camera.dtbo" "$work/t14-camera.dts"
+fdtoverlay -i "$bt/x1e78100-lenovo-thinkpad-t14s.dtb" \
+  -o "$camera/x1e78100-lenovo-thinkpad-t14s.dtb" "$work/t14-camera.dtbo"
+echo "54700a05112b0ac1a26051c8fed9015764b17da5b86b59de7af4e4b3de03c9ac  $camera/x1e78100-lenovo-thinkpad-t14s.dtb" | sha256sum -c -
+install -Dm644 "$camera/x1e78100-lenovo-thinkpad-t14s.dtb" /var/cache/airootfs/root/t14-camera.dtb
 id omarchy-builder &>/dev/null || useradd -m omarchy-builder
 for source in "$work"/hardware/*; do
   chown -R omarchy-builder:omarchy-builder "$source"

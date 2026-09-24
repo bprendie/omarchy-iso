@@ -1,0 +1,18 @@
+pkgname=omarchy-hw-t14s-camera-experimental
+pkgver=0.1
+pkgrel=1
+pkgdesc='T14s Gen 6 OV02C10 camera device-tree candidate for Dragon kernel 7.2.6'
+arch=('aarch64')
+license=('BSD-3-Clause')
+depends=('linux-aarch64' 'omarchy-hw-t14s-bluetooth-experimental')
+install=t14-camera.install
+options=('!strip' '!debug')
+
+package() {
+  install -Dm644 "$startdir/x1e78100-lenovo-thinkpad-t14s.dtb" \
+    "$pkgdir/usr/share/omarchy-hw-t14s-camera-experimental/x1e78100-lenovo-thinkpad-t14s.dtb"
+  install -Dm755 "$startdir/install-dtb" \
+    "$pkgdir/usr/lib/omarchy-hw-t14s-camera-experimental/install-dtb"
+  install -Dm644 "$startdir/90-t14s-camera-dtb.hook" \
+    "$pkgdir/usr/share/libalpm/hooks/90-t14s-camera-dtb.hook"
+}
